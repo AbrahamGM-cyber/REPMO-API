@@ -28,6 +28,7 @@ export class SparePartController {
     return this.SparePartService.getSparePartById(id);
   }
 
+  
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll(

@@ -13,7 +13,9 @@ export interface SparePartProps {
     model:              string;
     imgUrl:             string;
     branchId:            UUID; 
+    categoryId:         UUID;
     branch?:             any;   
+    category?:          any;
     createdAt?: Date;
     updatedAt?: Date;              
 }
@@ -29,7 +31,9 @@ export class SparePart {
     private _model: string;
     private _imgUrl: string;
     private readonly _branchId: UUID;
+    private readonly _categoryId: UUID;
     private _branch: any;
+    private _category: any;
     private readonly _createdAt: Date;
     private _updatedAt: Date;
 
@@ -44,7 +48,9 @@ export class SparePart {
         this._model = props.model;
         this._imgUrl = props.imgUrl;
         this._branchId = props.branchId;
+        this._categoryId = props.categoryId;
         this._branch = props.branch;
+        this._category = props.category;
         this._createdAt = props.createdAt || new Date();
         this._updatedAt = props.updatedAt || new Date();
     }
@@ -90,6 +96,10 @@ export class SparePart {
     return this._branchId;
   }
 
+  get categoryId(): UUID {
+    return this._categoryId;
+  }
+
   get createdAt(): Date {
     return this._createdAt;
   }
@@ -100,6 +110,9 @@ export class SparePart {
 
   get branch(): any {
     return this._branch;
+  }
+  get category(): any {
+    return this._category;
   }
 
   // Business logic methods
@@ -131,7 +144,9 @@ export class SparePart {
       model: this._model,
       imgUrl: this._imgUrl,
       branchId: this._branchId?.getValue(),
+      categoryId: this._categoryId?.getValue(),
       branch: this._branch ? this._branch.toJSON() : null,
+      category: this._category ? this._category.toJSON() : null,
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
     };

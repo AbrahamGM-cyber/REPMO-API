@@ -47,7 +47,8 @@ export class PrismaBranchRepository implements IBranchRepository {
                 description: spare.description,
                 code: spare.code,
                 price: Number(spare.price),
-                branchId:  UUID.fromString(spare.branchId)
+                branchId:  UUID.fromString(spare.branchId),
+                categoryId:  UUID.fromString(spare.categoryId),
             }))
         });
     };

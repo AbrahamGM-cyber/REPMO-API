@@ -1,5 +1,5 @@
 import { Controller, UsePipes, ValidationPipe, Get, Post, Delete, HttpCode, HttpStatus, Put, Body, Param, Query } from '@nestjs/common';
-import { SparePartResponseDto, CreateSparePartDto, UpdateSparePartDto, SparePartFilter } from 'src/application/dtos/spare-part.dto';
+import { SparePartResponseDto, CreateSparePartDto, UpdateSparePartDto, SparePartFilter, publicSparePartResponseDto } from 'src/application/dtos/spare-part.dto';
 import { SparePartService } from 'src/application/services/spare-part.service';
 
 @Controller('spare-part')
@@ -7,28 +7,50 @@ import { SparePartService } from 'src/application/services/spare-part.service';
 export class SparePartController {
   constructor(private readonly SparePartService: SparePartService) {}
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: CreateSparePartDto): Promise<SparePartResponseDto> {
-    return this.SparePartService.createSparePart(dto);
-  }
+  // ==========================================
+  // PUBLIC SECTION (CLIENTS)
+  // ==========================================
 
-  @Put(':id')
+  @Get('catalog')
   @HttpCode(HttpStatus.OK)
-  async updateSparePart(
-    @Param('id') id: string,
-    @Body() updateSparePartDto: UpdateSparePartDto
-  ): Promise<SparePartResponseDto> {
-    return this.SparePartService.updateSparePart( id,updateSparePartDto );
+  async findCatalog(
+    @Query() filters: SparePartFilter
+  ): Promise<{
+    data: publicSparePartResponseDto[],
+    total: number,
+    page: number,
+    totalPages: number,
+    nextPage?: number;
+    prevPage?: number;
+  }> {
+    return this.SparePartService.getPublicSpareParts(filters);
   }
 
-  @Get(':id')
+  @Get('catalog/category/:categoryId')
   @HttpCode(HttpStatus.OK)
-  async findById(@Param('id') id: string): Promise<SparePartResponseDto> {
-    return this.SparePartService.getSparePartById(id);
+  async findCatalogByCategoryId(
+    @Param('categoryId') categoryId: string, 
+    @Query() filters: SparePartFilter): Promise<{
+      data: publicSparePartResponseDto[]
+      total:number
+      page: number,
+      totalPages: number,
+      nextPage?: number;
+      prevPage?: number;
+    }> {
+    return this.SparePartService.getSparePartsByCategoryId(categoryId, filters);
   }
 
-  
+   // ==========================================
+  // PRIVATE SECTION (ADMIN/USER)
+  // ==========================================
+
+  @Get('branch/:branchId')
+  @HttpCode(HttpStatus.OK)
+  async findByBranchId(@Param('branchId') branchId: string): Promise<SparePartResponseDto[]> {
+    return this.SparePartService.getSparePartsByBranchId(branchId);
+  }
+
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll(
@@ -44,10 +66,25 @@ export class SparePartController {
     return this.SparePartService.getAllSpareParts(filters);
   }
 
-  @Get('branch/:branchId')
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findByBranchId(@Param('branchId') branchId: string): Promise<SparePartResponseDto[]> {
-    return this.SparePartService.getSparePartsByBranchId(branchId);
+  async findById(@Param('id') id: string): Promise<SparePartResponseDto> {
+    return this.SparePartService.getSparePartById(id);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: CreateSparePartDto): Promise<SparePartResponseDto> {
+    return this.SparePartService.createSparePart(dto);
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  async updateSparePart(
+    @Param('id') id: string,
+    @Body() updateSparePartDto: UpdateSparePartDto
+  ): Promise<SparePartResponseDto> {
+    return this.SparePartService.updateSparePart( id,updateSparePartDto );
   }
 
   @Delete(':id')

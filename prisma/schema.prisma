@@ -8,39 +8,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Category {
+  code          String      @unique
+  id            String      @id @default(uuid())
+  name_category String
+  categoryCount Int         @default(autoincrement()) @map("category_count")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  spareParts    SparePart[]
+}
+
 model SparePart {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   brand       String
-  namePart    String    @map("name_part")
-  price       Decimal   @default(0) @db.Decimal(10, 2)
-  stock       Int       @default(0)
+  namePart    String   @map("name_part")
+  price       Decimal  @default(0) @db.Decimal(10, 2)
+  stock       Int      @default(0)
   model       String
-  imgUrl      String    @map("img_url")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  imgUrl      String   @map("img_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
   code        String
   description String
-  branchId    String    @map("branch_id")
-  branch      Branch    @relation(fields: [branchId], references: [id])
+  branchId    String   @map("branch_id")
+  categoryId  String   @map("category_id")
+  branch      Branch   @relation(fields: [branchId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
 }
 
 model Store {
-  id         String       @id @default(uuid())
-  nameStore  String       @map("name_store")
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @updatedAt @map("updated_at")
-  code       String       @unique
-  branches   Branch[]
+  id        String   @id @default(uuid())
+  nameStore String   @map("name_store")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  code      String   @unique
+  branches  Branch[]
 }
 
 model Branch {
-  id        String    @id @default(uuid())
-  storeId   String    @map("store_id")
-  direction String
-  latitude  Float?    @map("latitude")
-  longitude Float?    @map("longitude")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  store     Store?    @relation(fields: [storeId], references: [id])
+  id         String      @id @default(uuid())
+  storeId    String      @map("store_id")
+  direction  String
+  latitude   Float?      @map("latitude")
+  longitude  Float?      @map("longitude")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  store      Store       @relation(fields: [storeId], references: [id])
   spareParts SparePart[]
 }

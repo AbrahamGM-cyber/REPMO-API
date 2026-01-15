@@ -8,7 +8,8 @@ export interface BranchProps {
     longitude?:     number     
     createdAt?:     Date;
     updatedAt?:     Date;  
-    storeId:       UUID; 
+    storeId:       UUID;
+    store?:        any; 
     SpareParts?:    SparePart[]         
 }
  
@@ -20,9 +21,9 @@ export class Branch {
     private _longitude: number;
     private readonly _createdAt: Date;
     private _updatedAt: Date;
-     private readonly _storeId: UUID;
-      private _SpareParts: SparePart[] = [];
-
+    private readonly _storeId: UUID;
+    private _store: any;
+    private _SpareParts: SparePart[] = [];
     private constructor(props: BranchProps) {
         // this._code= props.code;
         this._id = props.id || UUID.create();
@@ -32,6 +33,7 @@ export class Branch {
         this._createdAt = props.createdAt || new Date();
         this._updatedAt = props.updatedAt || new Date();
         this._storeId = props.storeId;
+        this._store = props.store || null;
         this._SpareParts = props.SpareParts || [];
     }
 
@@ -66,6 +68,10 @@ export class Branch {
 
   get storeId(): UUID{
     return this._storeId;
+  }
+
+  get store(): any {
+    return this._store;
   }
 
   get SpareParts(): SparePart[] {
@@ -106,6 +112,7 @@ export class Branch {
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
       storeId: this._storeId?.getValue(),
+      store: this._store ? this._store.toJSON() : null,
     };
   }
 }

@@ -1,6 +1,11 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 import { SparePartResponseDto } from "./spare-part.dto";
 
+class StoreResponseNestedDto {
+    code:      string;
+    nameStore: string
+}
+
 export class BranchResponseDto {
     id:             string     
     direction:      string
@@ -10,6 +15,7 @@ export class BranchResponseDto {
     updatedAt?:     Date; 
     storeId?:           string; 
     SpareParts?:    SparePartResponseDto[];
+    store?:         StoreResponseNestedDto;
 }
 
 export class CreateBranchDto{

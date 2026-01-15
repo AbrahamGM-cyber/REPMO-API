@@ -1,4 +1,22 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
+import { BranchResponseDto } from "./branch.dto";
+import { CategoryResponseDto } from "./category.dto";
+
+class StoreResponseNestedDto {
+    code:      string;
+    nameStore: string
+}
+
+class BranchResponseNestedDto {
+    id?:      string;
+    direction: string;
+    store?:   StoreResponseNestedDto;
+}
+
+class CategoryResponseNestedDto {
+    id?:      string;
+    name_category: string;
+}
 
 export class SparePartResponseDto {
     code:               string;
@@ -11,9 +29,23 @@ export class SparePartResponseDto {
     model:              string;
     imgUrl:             string;
     branchId?:           string; 
-    branch?:             any;   
+    categoryId?:       string;
+    branch?:             BranchResponseNestedDto;
+    category?:           CategoryResponseNestedDto;
+    // branch?:             BranchResponseDto;   
     createdAt?: Date;
     updatedAt?: Date;              
+}
+
+export class publicSparePartResponseDto {
+    code: string;
+    price?: number;
+    brand: string;
+    model: string;
+    namePart: string;
+    imgUrl: string;
+    branch?: BranchResponseNestedDto;
+    category?: CategoryResponseNestedDto;
 }
 
 export class CreateSparePartDto{
@@ -45,6 +77,10 @@ export class CreateSparePartDto{
     @IsUUID()
     @IsNotEmpty()
     branchId: string;
+
+    @IsUUID()
+    @IsNotEmpty()
+    categoryId: string;
 }
 
 export class UpdateSparePartDto{
@@ -89,6 +125,10 @@ export class SparePartFilter {
     @IsOptional()
     @IsString()
     model: string;
+
+    @IsOptional()
+    @IsString()
+    categoryId: string;
 
     @IsOptional()
     page?: number;
